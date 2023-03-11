@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .serializers import *
 from .models import Coupens, Dynamic_coupens, Static_coupens
+from accounts.models import AdminProfile
 from rest_framework import status,permissions,viewsets,generics,mixins
 import uuid
 from rest_framework.response import Response
@@ -9,7 +10,6 @@ from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 import pandas as pd
 import numpy as np
-from django.db.models import Q
 from datetime import date,datetime, timedelta
 import datetime
 
@@ -35,7 +35,9 @@ class staticCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 		numberOfcoupens = request.data['numberOfcoupens']
 		lengthofcode = request.data['lengthofcode']
 		limit_coupens = request.data['limit_coupens']
-		postdata = Coupens.objects.create(name=name,valid_date=valid_date, is_static=True,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
+		user = User.objects.get(email = request.user)
+		admin = AdminProfile.objects.get(user=user)
+		postdata = Coupens.objects.create(company=admin,name=name,valid_date=valid_date, is_static=True,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
 		data = Static_coupens.objects.create(coupens=postdata,limit_coupens=limit_coupens,code=code)
 		ser = coupensSerializer(postdata).data
 		return JsonResponse(ser, status=status.HTTP_201_CREATED)
@@ -71,8 +73,9 @@ class DynamicCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 				print("This is value of j",j)
 				users_id.append(i)
 	
-
-		postdata = Coupens.objects.create(name=name, valid_date=valid_date, is_static=False,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
+		user = User.objects.get(email = request.user)
+		admin = AdminProfile.objects.get(user=user)
+		postdata = Coupens.objects.create(company=admin, name=name, valid_date=valid_date, is_static=False,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
 		for i in users_id:
 			id_yas = df['user_id'][i]
 			temp = User.objects.get(email=id_yas)
@@ -154,9 +157,6 @@ class couponsList(generics.ListCreateAPIView):
 	def get_queryset(self):
 		return Coupens.objects.all()
 
-        
-
-
 class UpdateCouponCode(APIView):
 
 	def post(self, request, *args, **kwargs):
@@ -176,3 +176,26 @@ class UpdateCouponCode(APIView):
 				return JsonResponse({'success': 'Coupon Code changed'}, status=status.HTTP_200_OK)
 		except:
 			return JsonResponse({'error': 'No Code Found'}, status=status.HTTP_400_BAD_REQUEST)
+
+class ReferCoupon(APIView):
+
+	def post(self, request, *args, **kwargs):
+		user = User.objects.get(email = request.user)
+		code = request.data['code']
+		try:
+			coupon = Dynamic_coupens.objects.get(user=user, code=code)
+		except:
+			return JsonResponse({'error': "User doesn't have this coupon code to refer"}, status=status.HTTP_401_UNAUTHORIZED)
+		friend_email = request.data['friendemail']
+		if(friend_email == request.user.email):
+			return JsonResponse({'error': "User cannot refer themselves"}, status=status.HTTP_401_UNAUTHORIZED)
+		referral = coupon.refer_friend(friend_email)
+		if(referral is None):
+			return JsonResponse({'error': 'Cannot Refer a friend limit exceeded'}, status=status.HTTP_401_UNAUTHORIZED)
+		else:
+			if(user.no_of_referrals>0):
+				user.no_of_referrals = user.no_of_referrals - 1
+				user.save()
+				return JsonResponse({'success': 'Referred a friend'}, status=status.HTTP_202_ACCEPTED)
+			else:
+				return JsonResponse({'error': 'Referral limit reached'}, status=status.HTTP_400_BAD_REQUEST)

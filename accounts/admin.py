@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from .models import AdminProfile
+from .models import AdminProfile, UserData
 
 # Register your models here.
 from rest_framework_simplejwt import token_blacklist
@@ -19,3 +19,4 @@ User = get_user_model()
 admin.site.register(User)
 admin.site.unregister(Group)
 admin.site.register(AdminProfile)
+admin.site.register(UserData)

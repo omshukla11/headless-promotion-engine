@@ -4,6 +4,7 @@ import uuid
 # Create your models here.
 
 class Coupens(models.Model):
+	company = models.ForeignKey(AdminProfile, on_delete=models.CASCADE,blank=True,null=True)
 	name = models.CharField(max_length=255,blank=True,null=True)
 	is_static = models.BooleanField(default=False, null=True)
 	cart_limit = models.TextField(blank=True,null=True)
@@ -38,9 +39,17 @@ class Dynamic_coupens(models.Model):
 		else:
 			generated_code = f"{username[:int(length_of_code)]}"
 		self.code = generated_code
-		self.save()
+		try:
+			self.save()
+		except:
+			return None
 		return generated_code
-
-
-
-
+	
+	def refer_friend(self, email):
+		if(self.coupens.numberOfcoupens>0):
+			user = User.objects.get(email = email)
+			referral = Dynamic_coupens.objects.create(user=user, coupens=self.coupens)
+			referral.generate_code()
+			return referral
+		else:
+			return None

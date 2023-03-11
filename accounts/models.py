@@ -52,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at        = models.DateTimeField(blank = False,auto_now_add=True)
     update_at         = models.DateTimeField(blank = False,auto_now=True)
     auth_provider     = models.CharField(max_length = 255, blank = False, null = False, default=AUTH_PROVIDERS.get('email'))
-
+    no_of_referrals   = models.IntegerField(default=5, blank=True, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -87,4 +87,5 @@ class AdminProfile(models.Model):
 
 class UserData(models.Model):
     admin = models.ForeignKey(AdminProfile, on_delete=models.SET_NULL, null=True)
-    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    referrals_left = models.IntegerField(default=5,blank=True,null=True)
