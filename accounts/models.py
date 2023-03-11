@@ -82,6 +82,8 @@ class AdminProfile(models.Model):
     location = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     img = models.ImageField(blank=True, null=True)
+    pan = models.TextField(blank=True, null=True, unique=True)
+    gst = models.TextField(blank=True, null=True, unique=True)
 
 class UserData(models.Model):
     admin = models.ForeignKey(AdminProfile, on_delete=models.SET_NULL, null=True)

@@ -145,7 +145,9 @@ class AdminAPI(mixins.CreateModelMixin, generics.GenericAPIView):
                 description = request.data['description']
                 coupon_count = int(request.data['coupon_count'])
                 img = request.FILES['img']
-                admin = AdminProfile.objects.create(user=user, companyname=companyname, location=location, description=description, coupon_count=coupon_count, img=img)
+                pan = request.data['pan']
+                gst = request.data['gst']
+                admin = AdminProfile.objects.create(user=user, companyname=companyname, location=location, description=description, coupon_count=coupon_count, img=img, pan=pan, gst=gst)
                 adminserializer = AdminSerializer(admin).data
                 return JsonResponse(adminserializer, status=status.HTTP_201_CREATED)
             except:
