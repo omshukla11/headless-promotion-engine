@@ -85,3 +85,4 @@ class AdminProfile(models.Model):
 
 class UserData(models.Model):
     admin = models.ForeignKey(AdminProfile, on_delete=models.SET_NULL, null=True)
+    

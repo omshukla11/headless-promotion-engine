@@ -1,0 +1,8 @@
+SECRET_KEY='django-insecure-l#!@*k&nzsl9uims*%v0c1_@v&a$50@bfu2cy!tedd8gf@5rky'
+EMAIL_HOST_USER="djangodummy8000@gmail.com"
+EMAIL_HOST_PASSWORD="pwccknpifiahnyrp"
+DEFAULT_FROM_EMAIL='djangodummy8000@gmail.com'
+SERVER_EMAIL='djangodummy8000@gmail.com'
+SOCIAL_SECRET='1234567890'
+GOOGLE_CLIENT_ID='639910362193-b1mhjc1erp54k4aj1amhvhtotklio5gt.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET='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'
