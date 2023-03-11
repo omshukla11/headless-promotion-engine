@@ -11,9 +11,14 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
+#rom decouple import config
 import os
 import datetime
+import environ
+
+environ.Env.read_env()
+
+config = environ.Env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
-
+#SECRET_KEY = 'django-insecure-l#!@*k&nzsl9uims*%v0c1_@v&a$50@bfu2cy!tedd8gf@5rky'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = ['*'] #for google callback
@@ -44,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'accounts',
+    'coupons'
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
