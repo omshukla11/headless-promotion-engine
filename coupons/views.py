@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from django.http.response import HttpResponse, JsonResponse
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
+import datetime
 
 User = get_user_model()
 
@@ -115,3 +116,23 @@ class VerifiedPayment(APIView):
 				return JsonResponse({'success': 'Static coupon used'}, status=status.HTTP_202_ACCEPTED)
 			except:
 				return JsonResponse({'error': 'No Coupon Code found'}, status=status.HTTP_204_NO_CONTENT)
+
+class UpdateCouponCode(APIView):
+
+	def post(self, request, *args, **kwargs):
+		oldcode = request.data['oldcode']
+		newcode = request.data['newcode']
+		try:
+			static = Static_coupens.objects.get(code = oldcode)
+			try:
+				temp = Static_coupens.objects.get(code = newcode)
+				try:
+					temp = Dynamic_coupens.objects.get(code = newcode)
+				except:
+					return JsonResponse({'Select another code as a coupon for this already exists'}, status=status.HTTP_226_IM_USED)
+			except:
+				static.code = newcode
+				static.save()
+				return JsonResponse({'success': 'Coupon Code changed'}, status=status.HTTP_200_OK)
+		except:
+			return JsonResponse({'error': 'No Code Found'}, status=status.HTTP_400_BAD_REQUEST)
