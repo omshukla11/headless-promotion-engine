@@ -33,7 +33,7 @@ class coupensgetSerializer(serializers.ModelSerializer):
 			return ""
 	class Meta:
 		model = Coupens
-		fields=['name','percent_limit','amount_limit','valid_date','coupens_static','dynamic_coupen']
+		fields=['name','percent_limit','amount_limit','valid_date','coupens_static','dynamic_coupen','cart_limit']
 
 
 # class coupensSerializer(serializers.ModelSerializer):

@@ -1,0 +1,310 @@
+{
+	"info": {
+		"_postman_id": "3c5fd865-a4cd-44cf-9cb0-1c5fef7d842c",
+		"name": "VoucherVault",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17845349"
+	},
+	"item": [
+		{
+			"name": "Admin Profile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc4NzgwNTU0LCJpYXQiOjE2Nzg1MjEzNTQsImp0aSI6IjNmOTMzZjAyYTU3YTRhOTliNWMwMDgyODNkNzQwZjc1IiwidXNlcl9pZCI6Mn0.FdsVUkpiZvfHtHJ3yjkH2dTplgnSM4mhAHf-N0pprSQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "companyname",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "coupon_count",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "location",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "img",
+							"type": "file",
+							"src": []
+						},
+						{
+							"key": "gst",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "pan",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/accounts/adminprofile/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"accounts",
+						"adminprofile",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Static Coupon Create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc4NzgwNTU0LCJpYXQiOjE2Nzg1MjEzNTQsImp0aSI6IjNmOTMzZjAyYTU3YTRhOTliNWMwMDgyODNkNzQwZjc1IiwidXNlcl9pZCI6Mn0.FdsVUkpiZvfHtHJ3yjkH2dTplgnSM4mhAHf-N0pprSQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"string\",\r\n  \"is_static\": true,\r\n  \"cart_limit\": \"string\",\r\n  \"category\": \"string\",\r\n  \"amount_limit\": \"string\",\r\n  \"percent_limit\": \"string\",\r\n  \"valid_date\": \"2023-03-12\",\r\n  \"code\": \"string\",\r\n  \"numberOfcoupens\": 10,\r\n  \"lengthofcode\": 20,\r\n  \"limit_coupens\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/coupons/static-create/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"coupons",
+						"static-create",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dynamic Coupon Create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc4NzgwNTU0LCJpYXQiOjE2Nzg1MjEzNTQsImp0aSI6IjNmOTMzZjAyYTU3YTRhOTliNWMwMDgyODNkNzQwZjc1IiwidXNlcl9pZCI6Mn0.FdsVUkpiZvfHtHJ3yjkH2dTplgnSM4mhAHf-N0pprSQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"string\",\r\n  \"is_static\": false,\r\n  \"cart_limit\": \"string\",\r\n  \"category\": \"string\",\r\n  \"amount_limit\": \"string\",\r\n  \"percent_limit\": \"string\",\r\n  \"valid_date\": \"2023-03-12\",\r\n  \"code\": \"string\",\r\n  \"numberOfcoupens\": 10,\r\n  \"lengthofcode\": 10,\r\n  \"limit_coupens\": 10,\r\n  \"users\": [\"omshukla@gmail.com\",\"vukkadakki@gufum.com\",\"om@example.com\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/coupons/dynamic-create/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"coupons",
+						"dynamic-create",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Coupon Code Verification",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc4NzgwNTU0LCJpYXQiOjE2Nzg1MjEzNTQsImp0aSI6IjNmOTMzZjAyYTU3YTRhOTliNWMwMDgyODNkNzQwZjc1IiwidXNlcl9pZCI6Mn0.FdsVUkpiZvfHtHJ3yjkH2dTplgnSM4mhAHf-N0pprSQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cartvalue\": 1000,\r\n    \"couponcode\": \"omshuklaaa\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/coupons/coupon-verify/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"coupons",
+						"coupon-verify",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Coupon Verified Payment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc4NzgwNTU0LCJpYXQiOjE2Nzg1MjEzNTQsImp0aSI6IjNmOTMzZjAyYTU3YTRhOTliNWMwMDgyODNkNzQwZjc1IiwidXNlcl9pZCI6Mn0.FdsVUkpiZvfHtHJ3yjkH2dTplgnSM4mhAHf-N0pprSQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"couponcode\": \"omshuklaaa\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/coupons/verified-payment/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"coupons",
+						"verified-payment",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Coupons",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/coupons/coupen-get/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"coupons",
+						"coupen-get",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc4NzgwNTU0LCJpYXQiOjE2Nzg1MjEzNTQsImp0aSI6IjNmOTMzZjAyYTU3YTRhOTliNWMwMDgyODNkNzQwZjc1IiwidXNlcl9pZCI6Mn0.FdsVUkpiZvfHtHJ3yjkH2dTplgnSM4mhAHf-N0pprSQ",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
