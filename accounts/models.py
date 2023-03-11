@@ -74,3 +74,15 @@ class User(AbstractBaseUser, PermissionsMixin):
             'refresh': str(refresh),
             'access': str(refresh.access_token)
         }
+
+class AdminProfile(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    companyname = models.CharField()
+    coupon_count = models.IntegerField(default=0)
+    location = models.TextField(blank=True, null=True)
+    description = models.TextField()
+    img = models.ImageField(blank=True, null=True)
+
+class UserData(models.Model):
+    admin = models.ForeignKey(AdminProfile, on_delete=models.SET_NULL)
+    
