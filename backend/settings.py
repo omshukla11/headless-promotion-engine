@@ -28,7 +28,8 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = ['*'] #for google callback
-
+RP_PUBLIC = config('RP_PUBLIC')
+RP_SECRET = config('RP_SECRET')
 
 # Application definition
 
@@ -45,7 +46,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'accounts',
-    'coupons'
+    'coupons',
+    'razorpayments',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

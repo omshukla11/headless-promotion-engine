@@ -202,6 +202,6 @@ class ReferCoupon(APIView):
 			if(user.no_of_referrals>0):
 				user.no_of_referrals = user.no_of_referrals - 1
 				user.save()
-				return JsonResponse({'success': 'Referred a friend'}, status=status.HTTP_202_ACCEPTED)
+				return JsonResponse({'success': 'Referred a friend', 'code':referral.code}, status=status.HTTP_202_ACCEPTED)
 			else:
 				return JsonResponse({'error': 'Referral limit reached'}, status=status.HTTP_400_BAD_REQUEST)

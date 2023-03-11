@@ -38,7 +38,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/',include('accounts.urls')),
     path('coupons/',include('coupons.urls')),
-
     # Swagger API Docs
 
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
