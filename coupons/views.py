@@ -75,7 +75,7 @@ class DynamicCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 		postdata = Coupens.objects.create(name=name, valid_date=valid_date, is_static=False,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
 		for i in users_id:
 			id_yas = df['user_id'][i]
-			temp = User.objects.get(id=id_yas)
+			temp = User.objects.get(email=id_yas)
 			data = Dynamic_coupens.objects.create(coupens=postdata,user=temp,is_used=False)
 			print(data.generate_code())
 
