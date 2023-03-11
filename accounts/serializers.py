@@ -8,7 +8,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_str, smart_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.urls import reverse
-
+from .models import AdminProfile
 from .utils import Util
 from django.conf import settings
 
@@ -140,6 +140,12 @@ class LogoutSerializer(serializers.Serializer):
 
         except TokenError:
             self.fail('bad_token')
+
+class AdminSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AdminProfile
+        fields = '__all__'
 
 
 ##############SOCIAL AUTH#######################

@@ -21,7 +21,8 @@ from django.shortcuts import render
 # Create your views here.
 
 from .utils import Util
-from accounts.serializers import GoogleSocialAuthSerializer,FacebookSocialAuthSerializer,UserSerializer, EmailVerificationSerializer, LoginSerializer, ResetPasswordEmailRequestSerializer,SetNewPasswordSerializer, LogoutSerializer
+from accounts.serializers import GoogleSocialAuthSerializer,FacebookSocialAuthSerializer,UserSerializer, EmailVerificationSerializer, LoginSerializer, ResetPasswordEmailRequestSerializer,SetNewPasswordSerializer, LogoutSerializer, AdminSerializer
+from .models import AdminProfile
 
 User = get_user_model()
 
@@ -128,7 +129,13 @@ class LogoutAPIView(generics.GenericAPIView):
         return Response({'message':'Logged out successfully'},status=status.HTTP_204_NO_CONTENT)
 
 
+class AdminAPI(mixins.CreateModelMixin, generics.GenericAPIView):
+    
+    queryset = AdminProfile.objects.all()
+    serializer_class = AdminSerializer
 
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 

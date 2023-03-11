@@ -77,12 +77,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class AdminProfile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    companyname = models.CharField()
+    companyname = models.CharField(max_length=255)
     coupon_count = models.IntegerField(default=0)
     location = models.TextField(blank=True, null=True)
     description = models.TextField()
     img = models.ImageField(blank=True, null=True)
 
 class UserData(models.Model):
-    admin = models.ForeignKey(AdminProfile, on_delete=models.SET_NULL)
-    
+    admin = models.ForeignKey(AdminProfile, on_delete=models.SET_NULL, null=True)
