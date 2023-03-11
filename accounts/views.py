@@ -135,8 +135,23 @@ class AdminAPI(mixins.CreateModelMixin, generics.GenericAPIView):
     serializer_class = AdminSerializer
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
+        try:
+            user = User.objects.get(email = request.user)
+            print(request.user)
+            
+            try:
+                companyname = request.data['companyname']
+                location = request.data['location']
+                description = request.data['description']
+                coupon_count = int(request.data['coupon_count'])
+                img = request.FILES['img']
+                admin = AdminProfile.objects.create(user=user, companyname=companyname, location=location, description=description, coupon_count=coupon_count, img=img)
+                adminserializer = AdminSerializer(admin).data
+                return JsonResponse(adminserializer, status=status.HTTP_201_CREATED)
+            except:
+                return JsonResponse({'error': 'Admin Profile creation failed'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return JsonResponse({'error': 'Anonymous user'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 ##############SOCIAL AUTH#######################
