@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from django.http.response import HttpResponse, JsonResponse
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
+import pandas as pd
+import numpy as np
 
 User = get_user_model()
 
@@ -54,9 +56,23 @@ class DynamicCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 		numberOfcoupens = request.data['numberOfcoupens']
 		lengthofcode = request.data['lengthofcode']
 		users = request.data['users']
+		csv_file = request.FILES['csv']
+		if not csv_file.name.endswith('.csv'):
+			return Response('THIS IS NOT A CSV FILE')
+		df = pd.read_csv(csv_file)
+		user_id = []
+		for i,j in enumerate(df['visited']):
+			print(i,"==",j)
+			if j>3:
+				print("this is perfect i ",i)
+				print("This is value of j",j)
+				users_id.append(i)
+	
+
 		postdata = Coupens.objects.create(name=name, valid_date=valid_date, is_static=False,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
-		for user_email in users:
-			temp = User.objects.get(email=user_email)
+		for i in user_id:
+			user_id = df[user_id][i]
+			temp = User.objects.get(id=user_id)
 			data = Dynamic_coupens.objects.create(coupens=postdata,user=temp,is_used=False)
 			print(data.generate_code())
 
@@ -64,7 +80,23 @@ class DynamicCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 	
 class CouponVerify(APIView):
 
-	permission_classes = [permissions.IsAuthenticated]
+	#permission_classes = [permissions.IsAuthenticated]
 	
 	def post(self, request, *args, **kwargs):
-		pass
+		csv_file = request.FILES['csv']
+		if not csv_file.name.endswith('.csv'):
+			return Response('THIS IS NOT A CSV FILE')
+
+		df = pd.read_csv(csv_file)
+		print(df.head())
+		print(df['user_id'])
+		for i,j in enumerate(df['visited']):
+			print(i,"==",j)
+			if j>3:
+
+				print("this is perfect i ",i)
+				print("This is value of j",j)
+		print(df['user_id'][1])
+
+		return Response("Done")
+
