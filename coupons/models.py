@@ -33,10 +33,10 @@ class Dynamic_coupens(models.Model):
 		username = self.user.username
 		length_of_code = self.coupens.lengthofcode
 		generated_code = ''
-		if(length_of_code>len(username)):
-			generated_code = f"{username}{uuid.uuid4().hex[:length_of_code-len(username)]}"
+		if(int(length_of_code)>len(username)):
+			generated_code = f"{username}{uuid.uuid4().hex[:int(length_of_code)-len(username)]}"
 		else:
-			generated_code = f"{username[:length_of_code]}"
+			generated_code = f"{username[:int(length_of_code)]}"
 		self.code = generated_code
 		self.save()
 		return generated_code
