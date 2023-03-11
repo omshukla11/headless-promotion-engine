@@ -9,9 +9,10 @@ from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 import pandas as pd
 import numpy as np
-
+from django.db.models import Q
+from datetime import date,datetime, timedelta
 User = get_user_model()
-
+from datetime import date
 # Create your views here.
 class staticCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 	queryset = Coupens.objects.all()
@@ -30,10 +31,10 @@ class staticCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 		valid_date = request.data['valid_date']
 		code = request.data['code']
 		numberOfcoupens = request.data['numberOfcoupens']
-		lengthofcode = request.data['lengthOfCode']
+		lengthofcode = request.data['lengthofcode']
 		limit_coupens = request.data['limit_coupens']
-		postdata = Coupens.objects.create(name=name,valid_date=valid_date, is_static=True,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,code=code,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
-		data = Static_coupens.objects.create(coupens=postdata,limit_coupens=limit_coupens)
+		postdata = Coupens.objects.create(name=name,valid_date=valid_date, is_static=True,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
+		data = Static_coupens.objects.create(coupens=postdata,limit_coupens=limit_coupens,code=code)
 		ser = coupensSerializer(postdata).data
 		return JsonResponse(ser, status=status.HTTP_201_CREATED)
 
@@ -55,12 +56,12 @@ class DynamicCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 		valid_date = request.data['valid_date']
 		numberOfcoupens = request.data['numberOfcoupens']
 		lengthofcode = request.data['lengthofcode']
-		users = request.data['users']
+		#users = request.data['users']
 		csv_file = request.FILES['csv']
 		if not csv_file.name.endswith('.csv'):
 			return Response('THIS IS NOT A CSV FILE')
 		df = pd.read_csv(csv_file)
-		user_id = []
+		users_id = []
 		for i,j in enumerate(df['visited']):
 			print(i,"==",j)
 			if j>3:
@@ -70,9 +71,9 @@ class DynamicCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 	
 
 		postdata = Coupens.objects.create(name=name, valid_date=valid_date, is_static=False,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
-		for i in user_id:
-			user_id = df[user_id][i]
-			temp = User.objects.get(id=user_id)
+		for i in users_id:
+			id_yas = df['user_id'][i]
+			temp = User.objects.get(id=id_yas)
 			data = Dynamic_coupens.objects.create(coupens=postdata,user=temp,is_used=False)
 			print(data.generate_code())
 
@@ -132,3 +133,28 @@ class VerifiedPayment(APIView):
 			except:
 				return JsonResponse({'error': 'No Coupon Code found'}, status=status.HTTP_204_NO_CONTENT)
 
+
+class Coupenget(APIView):
+	permission_classes = [permissions.IsAuthenticated]
+
+
+	def get(self, request, *args, **kwargs):
+		coupens =  Coupens.objects.all()
+		
+		return Response("Done")
+
+
+
+class couponsList(generics.ListCreateAPIView):
+    queryset = Coupens.objects.all()
+    serializer_class = coupensgetSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+    	#queryset = Coupens.objects.filter(Q(valid_date=>date.today()))
+    	queryset = Coupens.objects.all()
+    	print(queryset)
+    	return queryset
+
+
+        
