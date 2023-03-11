@@ -12,7 +12,7 @@ import numpy as np
 from django.db.models import Q
 from datetime import date,datetime, timedelta
 import datetime
-
+from accounts.utils import Util
 User = get_user_model()
 from datetime import date
 # Create your views here.
@@ -37,6 +37,9 @@ class staticCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 		limit_coupens = request.data['limit_coupens']
 		postdata = Coupens.objects.create(name=name,valid_date=valid_date, is_static=True,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
 		data = Static_coupens.objects.create(coupens=postdata,limit_coupens=limit_coupens,code=code)
+		email_body = "Hiii" + "! Here's your special coupon which you can use only one time As your are the frequent user of our website thank you for all your support for more details of coupon visit the website  \n"+"Coupon code = "+code
+		data ={'email_body': email_body, 'email_subject': "Congratualtions you are rewarded with the coupen name as "+name,'to_email':self.request.user.email}
+		Util.send_email(data)
 		ser = coupensSerializer(postdata).data
 		return JsonResponse(ser, status=status.HTTP_201_CREATED)
 
@@ -71,12 +74,14 @@ class DynamicCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 				print("This is value of j",j)
 				users_id.append(i)
 	
-
 		postdata = Coupens.objects.create(name=name, valid_date=valid_date, is_static=False,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
 		for i in users_id:
 			id_yas = df['user_id'][i]
 			temp = User.objects.get(email=id_yas)
 			data = Dynamic_coupens.objects.create(coupens=postdata,user=temp,is_used=False)
+			email_body = "Hiii" + "! Here's your special coupon which you can use only one time As your are the frequent user of our website thank you for all your support for more details of coupon visit the website  \n"+"Coupon Code = "+data.generate_code()
+			data_new ={'email_body': email_body, 'email_subject': "Congratualtions you are rewarded with the coupon name as "+name,'to_email':id_yas}
+			Util.send_email(data_new)
 			print(data.generate_code())
 
 		return JsonResponse({'success': 'created'}, status=status.HTTP_201_CREATED)
