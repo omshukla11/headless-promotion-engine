@@ -83,20 +83,52 @@ class CouponVerify(APIView):
 	#permission_classes = [permissions.IsAuthenticated]
 	
 	def post(self, request, *args, **kwargs):
-		csv_file = request.FILES['csv']
-		if not csv_file.name.endswith('.csv'):
-			return Response('THIS IS NOT A CSV FILE')
+		cart_value = request.data['cartvalue']
+		code = request.data['couponcode']
+		final_discount = -1
+		try:
+			dynamic = Dynamic_coupens.objects.get(code = code)
+			if(dynamic.is_used==False):
+				if(int(dynamic.coupens.cart_limit)<=cart_value):
+					final_discount = cart_value * (float(dynamic.coupens.percent_limit)*0.01)
+					final_discount = min(final_discount, float(dynamic.coupens.amount_limit))
+					return JsonResponse({'finaldiscount': final_discount, 'final_cart_value': (cart_value-final_discount)}, status=status.HTTP_202_ACCEPTED)
+				else:
+					return JsonResponse({'error': 'Cart value is less than expected'}, status=status.HTTP_400_BAD_REQUEST)
+			else:
+				return JsonResponse({'error': 'Coupon already used'}, status=status.HTTP_400_BAD_REQUEST)
+		except:
+			try:
+				static = Coupens.objects.get(code = code)
+				if(static.limit_coupens>0):
+					if(static.coupens.cart_limit<=cart_value):
+						final_discount = cart_value * (float(static.coupens.percent_limit)*0.01)
+						final_discount = min(final_discount, float(static.coupens.amount_limit))
+						return JsonResponse({'finaldiscount': final_discount, 'final_cart_value': (cart_value-final_discount)}, status=status.HTTP_202_ACCEPTED)
+					else:
+						return JsonResponse({'error': 'Cart value is less than expected'}, status=status.HTTP_400_BAD_REQUEST)
+				else:
+					return JsonResponse({'error': 'Total redemption exceeded'}, status=status.HTTP_403_FORBIDDEN)
+			except:
+				return JsonResponse({'error': 'No Coupon Code found'}, status=status.HTTP_204_NO_CONTENT)
+			
+class VerifiedPayment(APIView):
 
-		df = pd.read_csv(csv_file)
-		print(df.head())
-		print(df['user_id'])
-		for i,j in enumerate(df['visited']):
-			print(i,"==",j)
-			if j>3:
-
-				print("this is perfect i ",i)
-				print("This is value of j",j)
-		print(df['user_id'][1])
-
-		return Response("Done")
+	permission_classes = [permissions.IsAuthenticated]
+	
+	def post(self, request, *args, **kwargs):
+		code = request.data['couponcode']
+		try:
+			dynamic = Dynamic_coupens.objects.get(code = code)
+			dynamic.is_used = True
+			dynamic.save()
+			return JsonResponse({'success': 'Dynamic coupon used'}, status=status.HTTP_202_ACCEPTED)
+		except:
+			try:
+				static = Coupens.objects.get(code = code)
+				static.limit_coupens = static.limit_coupens - 1
+				static.save()
+				return JsonResponse({'success': 'Static coupon used'}, status=status.HTTP_202_ACCEPTED)
+			except:
+				return JsonResponse({'error': 'No Coupon Code found'}, status=status.HTTP_204_NO_CONTENT)
 
