@@ -139,13 +139,59 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"string\",\r\n  \"is_static\": false,\r\n  \"cart_limit\": \"string\",\r\n  \"category\": \"string\",\r\n  \"amount_limit\": \"string\",\r\n  \"percent_limit\": \"string\",\r\n  \"valid_date\": \"2023-03-12\",\r\n  \"code\": \"string\",\r\n  \"numberOfcoupens\": 10,\r\n  \"lengthofcode\": 10,\r\n  \"limit_coupens\": 10,\r\n  \"users\": [\"omshukla@gmail.com\",\"vukkadakki@gufum.com\",\"om@example.com\"]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Om",
+							"type": "text"
+						},
+						{
+							"key": "is_static",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "cart_limit",
+							"value": "1000",
+							"type": "text"
+						},
+						{
+							"key": "category",
+							"value": "Books",
+							"type": "text"
+						},
+						{
+							"key": "amount_limit",
+							"value": "200",
+							"type": "text"
+						},
+						{
+							"key": "percent_limit",
+							"value": "40",
+							"type": "text"
+						},
+						{
+							"key": "valid_date",
+							"value": "2023-03-15",
+							"type": "text"
+						},
+						{
+							"key": "numberOfcoupens",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "lengthofcode",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "csv",
+							"type": "file",
+							"src": "/D:/Web DEV/New folder/backend/data.csv"
 						}
-					}
+					]
 				},
 				"url": {
 					"raw": "http://127.0.0.1:8000/coupons/dynamic-create/",
@@ -270,6 +316,49 @@
 					"path": [
 						"coupons",
 						"coupen-get",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refer Friend",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc4ODI3MzQ1LCJpYXQiOjE2Nzg1NjgxNDUsImp0aSI6IjVkYzg1OTA4N2EzMTQxM2ZhYzdiODAwY2RhMDE4MTAyIiwidXNlcl9pZCI6Mn0.9FUqIDxBekI_b4GCQg26vCdWO1yAZgkXavjhDwkvRcc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"code\": \"stringeaec\",\r\n    \"friendemail\": \"omshukla@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/coupons/refer-a-friend/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"coupons",
+						"refer-a-friend",
 						""
 					]
 				}

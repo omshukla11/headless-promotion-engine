@@ -37,13 +37,17 @@ class staticCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
 		limit_coupens = request.data['limit_coupens']
 		user = User.objects.get(email = request.user)
 		admin = AdminProfile.objects.get(user=user)
-		postdata = Coupens.objects.create(company=admin,name=name,valid_date=valid_date, is_static=True,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
-		data = Static_coupens.objects.create(coupens=postdata,limit_coupens=limit_coupens,code=code)
-		email_body = "Hiii" + "! Here's your special coupon which you can use only one time As your are the frequent user of our website thank you for all your support for more details of coupon visit the website  \n"+"Coupon code = "+code
-		data ={'email_body': email_body, 'email_subject': "Congratualtions you are rewarded with the coupen name as "+name,'to_email':self.request.user.email}
-		Util.send_email(data)
-		ser = coupensSerializer(postdata).data
-		return JsonResponse(ser, status=status.HTTP_201_CREATED)
+		try:
+			temp = Static_coupens.objects.get(code=code)
+			return JsonResponse({'error': 'This code already exists'}, status=status.HTTP_400_BAD_REQUEST)
+		except:
+			postdata = Coupens.objects.create(company=admin,name=name,valid_date=valid_date, is_static=True,cart_limit = cart_limit,category = category,amount_limit=amount_limit,percent_limit=percent_limit,numberOfcoupens=numberOfcoupens,lengthofcode=lengthofcode)
+			data = Static_coupens.objects.create(coupens=postdata,limit_coupens=limit_coupens,code=code)
+			email_body = "Hiii" + "! Here's your special coupon which you can use only one time As your are the frequent user of our website thank you for all your support for more details of coupon visit the website  \n"+"Coupon code = "+code
+			data ={'email_body': email_body, 'email_subject': "Congratualtions you are rewarded with the coupen name as "+name,'to_email':self.request.user.email}
+			Util.send_email(data)
+			ser = coupensSerializer(postdata).data
+			return JsonResponse(ser, status=status.HTTP_201_CREATED)
 
 
 class DynamicCoupenDetails(mixins.CreateModelMixin, generics.GenericAPIView):
@@ -175,7 +179,7 @@ class UpdateCouponCode(APIView):
 				try:
 					temp = Dynamic_coupens.objects.get(code = newcode)
 				except:
-					return JsonResponse({'Select another code as a coupon for this already exists'}, status=status.HTTP_226_IM_USED)
+					return JsonResponse({'error':'Select another code as a coupon for this already exists'}, status=status.HTTP_226_IM_USED)
 			except:
 				static.code = newcode
 				static.save()

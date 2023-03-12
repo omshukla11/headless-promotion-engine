@@ -48,8 +48,11 @@ class Dynamic_coupens(models.Model):
 	def refer_friend(self, email):
 		if(self.coupens.numberOfcoupens>0):
 			user = User.objects.get(email = email)
-			referral = Dynamic_coupens.objects.create(user=user, coupens=self.coupens)
-			referral.generate_code()
+			try:
+				referral = Dynamic_coupens.objects.get(user=user, coupens=self.coupens)
+			except:
+				referral = Dynamic_coupens.objects.create(user=user, coupens=self.coupens)
+				referral.generate_code()
 			return referral
 		else:
 			return None
